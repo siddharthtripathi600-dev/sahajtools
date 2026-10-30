@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="description" content="Free EMI, GST, age, BMI, percentage and word counter tools in English and Hindi.">
+<meta name="description" content="Free EMI, GST, SIP, discount, age, BMI, percentage, unit converter and word counter tools in English and Hindi.">
 <title>SahajTools</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700;800&family=Hind:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap">
@@ -117,6 +117,12 @@ input[type="range"] { width: 100%; accent-color: var(--brand); height: 28px; }
 .seg span { display: inline-flex; min-height: 44px; align-items: center; padding: 0 16px; border: 1px solid var(--line); border-radius: 10px; background: var(--bg); font-weight: 600; cursor: pointer; }
 .seg input:checked + span { background: var(--brand); color: var(--brand-fg); border-color: var(--brand); }
 .seg input:focus-visible + span { outline: 3px solid var(--brand); outline-offset: 2px; }
+select { width: 100%; font: 500 16px var(--font-body); color: var(--fg); background: var(--bg); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; min-height: 46px; }
+select:focus-visible { outline: 3px solid var(--brand); border-color: var(--brand); }
+.guide { margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--line); }
+.guide h3 { font: 700 18px var(--font-display); margin: 0 0 6px; }
+.guide p { margin: 0 0 8px; max-width: 66ch; color: var(--muted); }
+.guide p.hi { color: var(--muted); }
 .note { font-size: 14px; color: var(--muted); margin: 14px 0 0; }
 
 /* results */
@@ -183,9 +189,12 @@ footer nav { display: flex; flex-wrap: wrap; gap: 6px 18px; }
     <nav class="tabs" aria-label="Tools">
       <a href="#emi" data-nav="emi">EMI</a>
       <a href="#gst" data-nav="gst">GST</a>
+      <a href="#sip" data-nav="sip">SIP</a>
+      <a href="#discount" data-nav="discount">Discount</a>
       <a href="#age" data-nav="age">Age</a>
       <a href="#bmi" data-nav="bmi">BMI</a>
       <a href="#percent" data-nav="percent">Percentage</a>
+      <a href="#convert" data-nav="convert">Converter</a>
       <a href="#text" data-nav="text">Word counter</a>
     </nav>
   </div>
@@ -243,6 +252,13 @@ footer nav { display: flex; flex-wrap: wrap; gap: 6px 18px; }
           <div class="legend"><span><b style="background:var(--brand)"></b>Principal · मूलधन <span id="emiPp"></span></span><span><b style="background:var(--accent)"></b>Interest · ब्याज <span id="emiIp"></span></span></div>
         </div>
         <p class="note">Values are estimates for a fixed-rate, reducing-balance loan. Your bank's figure may differ because of fees and rounding.</p>
+      
+        <div class="guide">
+          <h3>How it works · यह कैसे काम करता है</h3>
+          <p>EMI = P × r × (1 + r)<sup>n</sup> ÷ ((1 + r)<sup>n</sup> − 1). Here P is the loan amount, r is the monthly interest rate (yearly rate ÷ 12 ÷ 100) and n is the number of months.</p>
+          <p>A longer tenure gives a smaller EMI, but you pay more interest in total. Try moving the tenure slider to see this.</p>
+          <p class="hi" lang="hi">लंबी अवधि में EMI कम होती है, पर कुल ब्याज ज़्यादा देना पड़ता है। स्लाइडर बदलकर देखिए।</p>
+        </div>
       </section>
 
       <!-- GST -->
@@ -282,6 +298,13 @@ footer nav { display: flex; flex-wrap: wrap; gap: 6px 18px; }
           </dl>
         </div>
         <p class="note">Check the current GST rate for your product on the official GST portal. Rates can change.</p>
+      
+        <div class="guide">
+          <h3>How it works · यह कैसे काम करता है</h3>
+          <p>To add GST: GST = amount × rate ÷ 100, and final price = amount + GST. To remove GST from a price that already includes it: price before GST = amount ÷ (1 + rate ÷ 100).</p>
+          <p>For a sale inside one state, GST is split equally into CGST and SGST. For a sale between two states, the full GST is charged as IGST.</p>
+          <p class="hi" lang="hi">एक ही राज्य में बिक्री पर GST आधा-आधा CGST और SGST में बंटता है। दूसरे राज्य में बिक्री पर पूरा IGST लगता है।</p>
+        </div>
       </section>
 
       <!-- Age -->
@@ -307,6 +330,12 @@ footer nav { display: flex; flex-wrap: wrap; gap: 6px 18px; }
             <div><dt>Total days · कुल दिन</dt><dd id="ageDays">—</dd></div>
             <div><dt>Next birthday · अगला जन्मदिन</dt><dd id="ageNext">—</dd></div>
           </dl>
+        </div>
+      
+        <div class="guide">
+          <h3>How it works · यह कैसे काम करता है</h3>
+          <p>The tool counts complete years from the date of birth, then the remaining months, then the remaining days up to the date you choose. You can change "Age on date" to find age on any day, for example for a form or an exam.</p>
+          <p class="hi" lang="hi">फ़ॉर्म या परीक्षा के लिए किसी ख़ास तारीख़ पर उम्र जाननी हो, तो "इस तारीख़ को उम्र" बदल दीजिए।</p>
         </div>
       </section>
 
@@ -334,6 +363,13 @@ footer nav { display: flex; flex-wrap: wrap; gap: 6px 18px; }
           <div class="ticks" aria-hidden="true"><span>15</span><span>18.5</span><span>25</span><span>30</span><span>40</span></div>
         </div>
         <p class="note">Categories follow the WHO adult ranges. For Indian adults, some doctors use lower cut-offs. Talk to a doctor for health advice. डॉक्टर से सलाह ज़रूर लें।</p>
+      
+        <div class="guide">
+          <h3>How it works · यह कैसे काम करता है</h3>
+          <p>BMI = weight in kg ÷ (height in metres × height in metres). WHO adult ranges: below 18.5 underweight, 18.5 to 24.9 normal, 25 to 29.9 overweight, 30 and above obese.</p>
+          <p>BMI does not separate muscle from fat, so a very muscular person can show a high BMI. Use it only as a first check.</p>
+          <p class="hi" lang="hi">BMI सिर्फ़ शुरुआती जांच है। मांसपेशियां और चर्बी इसमें अलग नहीं गिनी जातीं।</p>
+        </div>
       </section>
 
       <!-- Percentage -->
@@ -356,6 +392,13 @@ footer nav { display: flex; flex-wrap: wrap; gap: 6px 18px; }
           </div>
         </div>
         <p class="note">Useful for discounts, marks, salary hikes and profit. छूट, अंक, वेतन वृद्धि और मुनाफ़े के लिए।</p>
+      
+        <div class="guide">
+          <h3>How it works · यह कैसे काम करता है</h3>
+          <p>X% of Y = X × Y ÷ 100. "A is what % of B" = A ÷ B × 100. Percentage change = (new − old) ÷ old × 100.</p>
+          <p>Example: a price that goes from 80 to 100 has risen by (100 − 80) ÷ 80 × 100 = 25%.</p>
+          <p class="hi" lang="hi">उदाहरण: 80 से 100 होने पर बढ़त (100 − 80) ÷ 80 × 100 = 25% है।</p>
+        </div>
       </section>
 
       <!-- Text -->
@@ -375,6 +418,122 @@ footer nav { display: flex; flex-wrap: wrap; gap: 6px 18px; }
             <div><dt>Sentences · वाक्य</dt><dd id="txS">—</dd></div>
             <div><dt>Reading time · पढ़ने का समय</dt><dd id="txR">—</dd></div>
           </dl>
+        </div>
+      
+        <div class="guide">
+          <h3>How it works · यह कैसे काम करता है</h3>
+          <p>Words are counted by splitting the text at spaces and line breaks. Sentences end at a full stop, question mark, exclamation mark or the Hindi purna viram (।). Reading time assumes about 200 words per minute.</p>
+          <p class="hi" lang="hi">शब्द स्पेस और नई लाइन से गिने जाते हैं। पढ़ने का समय लगभग 200 शब्द प्रति मिनट मानकर निकाला जाता है।</p>
+        </div>
+      </section>
+
+      <!-- SIP -->
+      <section class="panel" data-view="sip" aria-labelledby="h-sip">
+        <h2 id="h-sip">SIP Calculator</h2>
+        <p class="sub hi" lang="hi">SIP कैलकुलेटर</p>
+        <p class="lede">See how much a fixed monthly investment could grow to over time.</p>
+        <div class="form">
+          <div class="field full">
+            <label for="sipP">Monthly investment (₹) <span class="hi" lang="hi">हर महीने निवेश</span></label>
+            <input id="sipP" type="number" min="500" max="1000000" step="500" value="5000">
+            <input id="sipPr" type="range" min="500" max="100000" step="500" value="5000" aria-label="Monthly investment slider">
+          </div>
+          <div class="field">
+            <label for="sipR">Expected return (% per year) <span class="hi" lang="hi">अनुमानित रिटर्न</span></label>
+            <input id="sipR" type="number" min="1" max="30" step="0.5" value="12">
+            <input id="sipRr" type="range" min="1" max="30" step="0.5" value="12" aria-label="Expected return slider">
+          </div>
+          <div class="field">
+            <label for="sipY">Time (years) <span class="hi" lang="hi">समय (साल)</span></label>
+            <input id="sipY" type="number" min="1" max="40" step="1" value="10">
+            <input id="sipYr" type="range" min="1" max="40" step="1" value="10" aria-label="Years slider">
+          </div>
+        </div>
+        <div class="result" aria-live="polite">
+          <div class="headline"><span class="k">Estimated value <span class="hi" lang="hi">अनुमानित राशि</span></span><span class="big" id="sipOut">—</span></div>
+          <dl class="rows">
+            <div><dt>You invest · आपका निवेश</dt><dd id="sipInv">—</dd></div>
+            <div><dt>Estimated gain · अनुमानित लाभ</dt><dd id="sipGain">—</dd></div>
+          </dl>
+          <div class="split" aria-hidden="true"><i class="p" id="sipBarP"></i><i class="i" id="sipBarI"></i></div>
+          <div class="legend"><span><b style="background:var(--brand)"></b>Invested · निवेश</span><span><b style="background:var(--accent)"></b>Gain · लाभ</span></div>
+        </div>
+        <p class="note">This is an estimate only. Returns are not guaranteed. Mutual fund investments are subject to market risks. यह सिर्फ़ अनुमान है, असली रिटर्न बदल सकता है।</p>
+        <div class="guide">
+          <h3>How it works · यह कैसे काम करता है</h3>
+          <p>SIP means Systematic Investment Plan: you invest a fixed amount every month. The tool uses FV = P × (((1 + i)<sup>n</sup> − 1) ÷ i) × (1 + i), where P is the monthly amount, i is the monthly return (yearly ÷ 12 ÷ 100) and n is the number of months.</p>
+          <p>The longer you stay invested, the more the growth builds on earlier growth. Start early, even with a small amount.</p>
+          <p class="hi" lang="hi">SIP में हर महीने तय रकम लगाई जाती है। जितना लंबा समय, उतना ज़्यादा फ़ायदा। छोटी रकम से भी जल्दी शुरू करना अच्छा है।</p>
+        </div>
+      </section>
+
+      <!-- Discount -->
+      <section class="panel" data-view="discount" aria-labelledby="h-dc">
+        <h2 id="h-dc">Discount Calculator</h2>
+        <p class="sub hi" lang="hi">छूट (डिस्काउंट) कैलकुलेटर</p>
+        <p class="lede">Find the final price after a sale discount, with an optional second discount.</p>
+        <div class="form">
+          <div class="field full">
+            <label for="dcP">Original price (₹) <span class="hi" lang="hi">असली कीमत</span></label>
+            <input id="dcP" type="number" min="0" step="1" value="2000">
+          </div>
+          <div class="field">
+            <label for="dcD">Discount (%) <span class="hi" lang="hi">छूट</span></label>
+            <input id="dcD" type="number" min="0" max="100" step="1" value="25">
+          </div>
+          <div class="field">
+            <label for="dcE">Extra discount (%) <span class="hi" lang="hi">अतिरिक्त छूट</span></label>
+            <input id="dcE" type="number" min="0" max="100" step="1" value="10">
+          </div>
+        </div>
+        <div class="result" aria-live="polite">
+          <div class="headline"><span class="k">You pay <span class="hi" lang="hi">आप देंगे</span></span><span class="big" id="dcOut">—</span></div>
+          <dl class="rows">
+            <div><dt>You save · आपकी बचत</dt><dd id="dcSave">—</dd></div>
+            <div><dt>Total discount · कुल छूट</dt><dd id="dcEff">—</dd></div>
+          </dl>
+        </div>
+        <div class="guide">
+          <h3>How it works · यह कैसे काम करता है</h3>
+          <p>Final price = price × (1 − discount ÷ 100). When there are two discounts, the second one applies to the already reduced price. So 25% followed by 10% is a total of 32.5%, not 35%.</p>
+          <p class="hi" lang="hi">दो छूट एक साथ जोड़ी नहीं जातीं। दूसरी छूट घटी हुई कीमत पर लगती है, इसलिए 25% और 10% मिलकर 32.5% होती हैं, 35% नहीं।</p>
+        </div>
+      </section>
+
+      <!-- Converter -->
+      <section class="panel" data-view="convert" aria-labelledby="h-cv">
+        <h2 id="h-cv">Unit Converter</h2>
+        <p class="sub hi" lang="hi">इकाई बदलने वाला टूल</p>
+        <p class="lede">Convert length, weight and temperature between common units.</p>
+        <div class="form">
+          <div class="field">
+            <label for="cvT">Type <span class="hi" lang="hi">प्रकार</span></label>
+            <select id="cvT">
+              <option value="length">Length · लंबाई</option>
+              <option value="weight">Weight · वज़न</option>
+              <option value="temp">Temperature · तापमान</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="cvV">Value <span class="hi" lang="hi">मान</span></label>
+            <input id="cvV" type="number" step="any" value="1">
+          </div>
+          <div class="field">
+            <label for="cvF">From <span class="hi" lang="hi">से</span></label>
+            <select id="cvF"></select>
+          </div>
+          <div class="field">
+            <label for="cvTo">To <span class="hi" lang="hi">में</span></label>
+            <select id="cvTo"></select>
+          </div>
+        </div>
+        <div class="result" aria-live="polite">
+          <div class="headline"><span class="k">Result <span class="hi" lang="hi">नतीजा</span></span><span class="big" id="cvOut">—</span></div>
+        </div>
+        <div class="guide">
+          <h3>How it works · यह कैसे काम करता है</h3>
+          <p>Length and weight are first changed to a base unit (metre or kilogram) and then to the unit you chose. Temperature uses its own formulas: °F = °C × 9 ÷ 5 + 32 and K = °C + 273.15.</p>
+          <p class="hi" lang="hi">1 क्विंटल = 100 किलो और 1 टन = 1000 किलो होता है।</p>
         </div>
       </section>
 
@@ -414,9 +573,12 @@ footer nav { display: flex; flex-wrap: wrap; gap: 6px 18px; }
         <ul>
           <li><a href="#emi">EMI Calculator <span class="hi" lang="hi">EMI</span></a></li>
           <li><a href="#gst">GST Calculator <span class="hi" lang="hi">जीएसटी</span></a></li>
+          <li><a href="#sip">SIP Calculator <span class="hi" lang="hi">SIP</span></a></li>
+          <li><a href="#discount">Discount <span class="hi" lang="hi">छूट</span></a></li>
           <li><a href="#age">Age Calculator <span class="hi" lang="hi">उम्र</span></a></li>
           <li><a href="#bmi">BMI Calculator <span class="hi" lang="hi">बीएमआई</span></a></li>
           <li><a href="#percent">Percentage <span class="hi" lang="hi">प्रतिशत</span></a></li>
+          <li><a href="#convert">Unit Converter <span class="hi" lang="hi">इकाई</span></a></li>
           <li><a href="#text">Word Counter <span class="hi" lang="hi">शब्द</span></a></li>
         </ul>
       </div>
@@ -442,7 +604,7 @@ footer nav { display: flex; flex-wrap: wrap; gap: 6px 18px; }
   var val = function (id) { var v = parseFloat($(id).value); return isFinite(v) ? v : NaN; };
 
   /* ---------- routing ---------- */
-  var views = ["emi", "gst", "age", "bmi", "percent", "text", "about", "privacy"];
+  var views = ["emi", "gst", "sip", "discount", "age", "bmi", "percent", "convert", "text", "about", "privacy"];
   function route() {
     var h = (location.hash || "").replace("#", "");
     if (views.indexOf(h) < 0) h = "emi";
@@ -564,8 +726,66 @@ footer nav { display: flex; flex-wrap: wrap; gap: 6px 18px; }
   }
   $("txIn").addEventListener("input", text);
 
+  /* ---------- SIP ---------- */
+  function sip() {
+    var P = val("sipP"), R = val("sipR"), Y = val("sipY");
+    if (!(P > 0) || !(R >= 0) || !(Y > 0)) { $("sipOut").textContent = "—"; return; }
+    var n = Math.round(Y * 12), i = R / 12 / 100;
+    var fv = i === 0 ? P * n : P * ((Math.pow(1 + i, n) - 1) / i) * (1 + i);
+    var inv = P * n, share = inv / fv * 100;
+    $("sipOut").textContent = inr(fv);
+    $("sipInv").textContent = inr(inv);
+    $("sipGain").textContent = inr(fv - inv);
+    $("sipBarP").style.width = share + "%";
+    $("sipBarI").style.width = (100 - share) + "%";
+  }
+  bindPair("sipP", "sipPr", sip); bindPair("sipR", "sipRr", sip); bindPair("sipY", "sipYr", sip);
+
+  /* ---------- Discount ---------- */
+  function disc() {
+    var p = val("dcP"), d = val("dcD"), e = val("dcE");
+    if (!(p >= 0) || !(d >= 0)) { $("dcOut").textContent = "—"; return; }
+    if (!(e >= 0)) e = 0;
+    var fin = p * (1 - d / 100) * (1 - e / 100), save = p - fin;
+    $("dcOut").textContent = "₹" + num(fin, 2);
+    $("dcSave").textContent = "₹" + num(save, 2);
+    $("dcEff").textContent = num(p > 0 ? save / p * 100 : 0, 2) + "%";
+  }
+  ["dcP", "dcD", "dcE"].forEach(function (id) { $(id).addEventListener("input", disc); });
+
+  /* ---------- Converter ---------- */
+  var U = {
+    length: { mm: 0.001, cm: 0.01, m: 1, km: 1000, inch: 0.0254, foot: 0.3048, yard: 0.9144, mile: 1609.344 },
+    weight: { g: 0.001, kg: 1, quintal: 100, tonne: 1000, ounce: 0.028349523125, pound: 0.45359237 },
+    temp: { C: "°C Celsius", F: "°F Fahrenheit", K: "K Kelvin" }
+  };
+  function fillUnits() {
+    var t = $("cvT").value, keys = Object.keys(U[t]), html = "";
+    keys.forEach(function (k) { html += '<option value="' + k + '">' + (t === "temp" ? U[t][k] : k) + "</option>"; });
+    $("cvF").innerHTML = html; $("cvTo").innerHTML = html;
+    $("cvF").selectedIndex = 0; $("cvTo").selectedIndex = Math.min(1, keys.length - 1);
+    if (t === "length") { $("cvF").value = "km"; $("cvTo").value = "mile"; }
+    if (t === "weight") { $("cvF").value = "kg"; $("cvTo").value = "pound"; }
+    if (t === "temp") { $("cvF").value = "C"; $("cvTo").value = "F"; }
+  }
+  function conv() {
+    var t = $("cvT").value, v = val("cvV"), f = $("cvF").value, to = $("cvTo").value, r;
+    if (!isFinite(v)) { $("cvOut").textContent = "—"; return; }
+    if (t === "temp") {
+      var c = f === "C" ? v : f === "F" ? (v - 32) * 5 / 9 : v - 273.15;
+      r = to === "C" ? c : to === "F" ? c * 9 / 5 + 32 : c + 273.15;
+      $("cvOut").textContent = num(r, 4) + " " + (to === "K" ? "K" : "°" + to);
+    } else {
+      r = v * U[t][f] / U[t][to];
+      $("cvOut").textContent = num(r, 6) + " " + to;
+    }
+  }
+  $("cvT").addEventListener("change", function () { fillUnits(); conv(); });
+  ["cvV", "cvF", "cvTo"].forEach(function (id) { $(id).addEventListener("input", conv); $(id).addEventListener("change", conv); });
+  fillUnits();
+
   $("yr").textContent = new Date().getFullYear();
-  route(); emi(); gst(); age(); bmi(); pct(); text();
+  route(); emi(); gst(); sip(); disc(); age(); bmi(); pct(); conv(); text();
 })();
 </script>
 
