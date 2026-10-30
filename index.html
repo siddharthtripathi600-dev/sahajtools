@@ -1,0 +1,573 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Free EMI, GST, age, BMI, percentage and word counter tools in English and Hindi.">
+<title>SahajTools</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700;800&family=Hind:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+/* Layout: sticky tool nav on top, compact hero, tool panel + sidebar with ad slots, footer links.
+   Palette: deep teal brand on cool paper, small amber accent used only for ad labels and the active marker. */
+:root {
+  --bg: #F1F5F4;
+  --surface: #FFFFFF;
+  --surface-2: #E8EFEE;
+  --fg: #10262B;
+  --muted: #566B6F;
+  --line: #D3DDDC;
+  --brand: #0A6E6A;
+  --brand-fg: #FFFFFF;
+  --brand-soft: #D9EEEC;
+  --accent: #B77700;
+  --accent-soft: #FBF0D7;
+  --good: #1E7B45;
+  --warn: #A85F00;
+  --bad: #B3261E;
+  --font-display: "Bricolage Grotesque", "Hind", system-ui, sans-serif;
+  --font-body: "Hind", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0D1A1D; --surface: #142327; --surface-2: #1B2D32; --fg: #E5EEED; --muted: #93A9AC;
+    --line: #263A3F; --brand: #3FC4B9; --brand-fg: #06201E; --brand-soft: #173A3A;
+    --accent: #F0B73B; --accent-soft: #2E2713; --good: #5CCB8A; --warn: #F0B73B; --bad: #FF8F86;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0D1A1D; --surface: #142327; --surface-2: #1B2D32; --fg: #E5EEED; --muted: #93A9AC;
+  --line: #263A3F; --brand: #3FC4B9; --brand-fg: #06201E; --brand-soft: #173A3A;
+  --accent: #F0B73B; --accent-soft: #2E2713; --good: #5CCB8A; --warn: #F0B73B; --bad: #FF8F86;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg); color: var(--fg);
+  font-family: var(--font-body); font-size: 16px; line-height: 1.55;
+  padding-block: 0 40px;
+  padding-left: max(0px, env(safe-area-inset-left, 0px)); padding-right: max(0px, env(safe-area-inset-right, 0px));
+}
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 30; background: var(--surface); }
+a { color: var(--brand); }
+:focus-visible { outline: 3px solid var(--brand); outline-offset: 2px; border-radius: 4px; }
+.wrap { width: 100%; max-width: 1120px; margin-inline: auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.hi { font-family: var(--font-body); color: var(--muted); font-weight: 500; }
+
+/* header */
+.top { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20; background: var(--surface); border-bottom: 1px solid var(--line); }
+.top .wrap { display: flex; align-items: center; gap: 20px; padding-block: 10px; }
+.brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--fg); flex: none; }
+.brand-mark { width: 32px; height: 32px; border-radius: 8px; background: var(--brand); color: var(--brand-fg); display: grid; place-items: center; font: 800 18px var(--font-display); }
+.brand-name { font: 800 20px var(--font-display); letter-spacing: -0.01em; }
+nav.tabs { display: flex; gap: 4px; overflow-x: auto; min-width: 0; scrollbar-width: none; }
+nav.tabs::-webkit-scrollbar { display: none; }
+nav.tabs a { flex: none; padding: 8px 12px; border-radius: 8px; text-decoration: none; color: var(--muted); font-weight: 600; font-size: 15px; white-space: nowrap; }
+nav.tabs a:hover { background: var(--surface-2); color: var(--fg); }
+nav.tabs a[aria-current="page"] { background: var(--brand-soft); color: var(--brand); box-shadow: inset 0 -2px 0 var(--accent); }
+
+/* hero */
+.hero { padding-block: 28px 8px; }
+.hero h1 { font: 800 clamp(28px, 5vw, 44px)/1.08 var(--font-display); letter-spacing: -0.02em; margin: 0 0 6px; max-width: 18ch; text-wrap: balance; }
+.hero .hi-line { font-size: clamp(17px, 2.4vw, 21px); margin: 0 0 14px; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; padding: 0; margin: 0; list-style: none; }
+.chips li { font-size: 14px; font-weight: 600; padding: 4px 12px; border: 1px solid var(--line); border-radius: 999px; background: var(--surface); color: var(--muted); }
+
+/* ads (placeholders) */
+.ad { border: 1px dashed var(--accent); background: var(--accent-soft); border-radius: 10px; display: grid; place-items: center; text-align: center; color: var(--accent); padding: 10px; }
+.ad small { display: block; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 600; }
+.ad span { font: 600 13px var(--font-mono); }
+.ad.leader { min-height: 90px; margin-block: 18px; }
+.ad.rect { min-height: 250px; }
+.ad.inline { min-height: 100px; margin-top: 20px; }
+
+/* layout */
+.layout { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 24px; align-items: start; }
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 22px; min-width: 0; }
+.panel h2 { font: 800 clamp(22px, 3.4vw, 28px)/1.15 var(--font-display); margin: 0; letter-spacing: -0.01em; }
+.panel .sub { margin: 2px 0 6px; font-size: 17px; }
+.panel .lede { margin: 8px 0 18px; color: var(--muted); max-width: 62ch; }
+.side { display: flex; flex-direction: column; gap: 18px; min-width: 0; }
+.side h3 { font: 700 15px var(--font-display); text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); margin: 0 0 8px; }
+.more { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 16px; }
+.more ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+.more a { display: flex; justify-content: space-between; gap: 8px; padding: 8px 8px; border-radius: 8px; text-decoration: none; color: var(--fg); font-weight: 600; }
+.more a:hover { background: var(--surface-2); }
+.more a span { color: var(--muted); font-weight: 500; }
+
+/* forms */
+.form { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px 20px; }
+.field { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.field.full { grid-column: 1 / -1; }
+.field > label, .field > .lab { font-weight: 600; font-size: 15px; display: flex; flex-wrap: wrap; gap: 2px 8px; align-items: baseline; }
+.field > label .hi, .field > .lab .hi { font-size: 14px; }
+input[type="number"], input[type="date"], textarea {
+  width: 100%; font: 500 17px var(--font-mono); color: var(--fg); background: var(--bg);
+  border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; min-height: 46px;
+}
+textarea { font: 400 16px/1.55 var(--font-body); min-height: 160px; resize: vertical; }
+input:focus-visible, textarea:focus-visible { outline: 3px solid var(--brand); border-color: var(--brand); }
+input[type="range"] { width: 100%; accent-color: var(--brand); height: 28px; }
+.seg { display: flex; flex-wrap: wrap; gap: 8px; }
+.seg label { position: relative; }
+.seg input { position: absolute; opacity: 0; inset: 0; cursor: pointer; }
+.seg span { display: inline-flex; min-height: 44px; align-items: center; padding: 0 16px; border: 1px solid var(--line); border-radius: 10px; background: var(--bg); font-weight: 600; cursor: pointer; }
+.seg input:checked + span { background: var(--brand); color: var(--brand-fg); border-color: var(--brand); }
+.seg input:focus-visible + span { outline: 3px solid var(--brand); outline-offset: 2px; }
+.note { font-size: 14px; color: var(--muted); margin: 14px 0 0; }
+
+/* results */
+.result { margin-top: 22px; background: var(--brand-soft); border-radius: 12px; padding: 18px; }
+.result .headline { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 14px; }
+.result .headline .k { font-weight: 600; }
+.result .big { font: 600 clamp(28px, 6vw, 40px)/1.1 var(--font-mono); color: var(--brand); font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.rows { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin: 16px 0 0; }
+.rows div { background: var(--surface); border-radius: 10px; padding: 10px 12px; min-width: 0; }
+.rows dt { font-size: 13px; color: var(--muted); font-weight: 600; }
+.rows dd { margin: 2px 0 0; font: 600 18px var(--font-mono); font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.split { display: flex; height: 14px; border-radius: 7px; overflow: hidden; margin-top: 16px; background: var(--surface); }
+.split i { display: block; height: 100%; }
+.split .p { background: var(--brand); }
+.split .i { background: var(--accent); }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 14px; margin-top: 8px; color: var(--muted); }
+.legend b { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 6px; }
+.scale { position: relative; display: flex; height: 14px; border-radius: 7px; overflow: hidden; margin-top: 18px; }
+.scale i { flex: 1; display: block; }
+.mark { position: relative; height: 18px; }
+.mark::after { content: ""; position: absolute; left: var(--pos, 50%); top: 2px; width: 0; height: 0; transform: translateX(-50%); border: 7px solid transparent; border-bottom-color: var(--fg); border-top: 0; }
+.ticks { display: flex; justify-content: space-between; font: 500 12px var(--font-mono); color: var(--muted); }
+.status { display: inline-block; font-weight: 700; padding: 2px 12px; border-radius: 999px; background: var(--surface); }
+
+.trio { display: grid; gap: 14px; }
+.mini { background: var(--bg); border: 1px solid var(--line); border-radius: 12px; padding: 14px; display: grid; gap: 10px; }
+.mini .line { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; font-weight: 600; }
+.mini input { width: 120px; min-height: 42px; }
+.mini .out { font: 600 22px var(--font-mono); color: var(--brand); font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+
+.prose h2 { margin-bottom: 8px; }
+.prose p, .prose li { max-width: 66ch; }
+.prose h3 { font: 700 18px var(--font-display); margin: 20px 0 4px; }
+
+footer { margin-top: 36px; border-top: 1px solid var(--line); padding-block: 22px 8px; color: var(--muted); font-size: 14px; }
+footer .wrap { display: flex; flex-wrap: wrap; gap: 8px 22px; justify-content: space-between; }
+footer nav { display: flex; flex-wrap: wrap; gap: 6px 18px; }
+
+[data-view] { display: none; }
+[data-view].on { display: block; }
+
+@media (max-width: 900px) {
+  .layout { grid-template-columns: minmax(0, 1fr); }
+  .side { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+}
+@media (max-width: 560px) {
+  .form { grid-template-columns: minmax(0, 1fr); }
+  .panel { padding: 16px; }
+  .top .wrap { gap: 10px; }
+  .brand-name { display: none; }
+}
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+</style>
+
+<style>body{margin:0}</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="#emi" aria-label="SahajTools home">
+      <span class="brand-mark" aria-hidden="true">S</span>
+      <span class="brand-name">SahajTools</span>
+    </a>
+    <nav class="tabs" aria-label="Tools">
+      <a href="#emi" data-nav="emi">EMI</a>
+      <a href="#gst" data-nav="gst">GST</a>
+      <a href="#age" data-nav="age">Age</a>
+      <a href="#bmi" data-nav="bmi">BMI</a>
+      <a href="#percent" data-nav="percent">Percentage</a>
+      <a href="#text" data-nav="text">Word counter</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="hero">
+    <h1>Free calculators for everyday life</h1>
+    <p class="hi-line hi" lang="hi">रोज़ के कामों के लिए मुफ़्त कैलकुलेटर</p>
+    <ul class="chips">
+      <li>No sign-up</li>
+      <li>Works on phone</li>
+      <li>English + हिन्दी</li>
+      <li>Your data stays on your device</li>
+    </ul>
+  </section>
+
+  <aside class="ad leader" aria-label="Advertisement">
+    <div><small>Advertisement · विज्ञापन</small><span>Ad slot 728×90 (replace with your ad code)</span></div>
+  </aside>
+
+  <div class="layout">
+    <div>
+
+      <!-- EMI -->
+      <section class="panel" data-view="emi" aria-labelledby="h-emi">
+        <h2 id="h-emi">EMI Calculator</h2>
+        <p class="sub hi" lang="hi">लोन की EMI कैलकुलेटर</p>
+        <p class="lede">Find your monthly loan payment for a home, car or personal loan. Change the sliders to see the total interest.</p>
+        <div class="form">
+          <div class="field full">
+            <label for="emiP">Loan amount (₹) <span class="hi" lang="hi">लोन राशि</span></label>
+            <input id="emiP" type="number" min="10000" max="100000000" step="10000" value="500000">
+            <input id="emiPr" type="range" min="50000" max="10000000" step="50000" value="500000" aria-label="Loan amount slider">
+          </div>
+          <div class="field">
+            <label for="emiR">Interest rate (% per year) <span class="hi" lang="hi">ब्याज दर</span></label>
+            <input id="emiR" type="number" min="1" max="40" step="0.1" value="9.5">
+            <input id="emiRr" type="range" min="1" max="30" step="0.1" value="9.5" aria-label="Interest rate slider">
+          </div>
+          <div class="field">
+            <label for="emiT">Tenure (years) <span class="hi" lang="hi">अवधि (साल)</span></label>
+            <input id="emiT" type="number" min="1" max="30" step="1" value="5">
+            <input id="emiTr" type="range" min="1" max="30" step="1" value="5" aria-label="Tenure slider">
+          </div>
+        </div>
+        <div class="result" aria-live="polite">
+          <div class="headline"><span class="k">Monthly EMI <span class="hi" lang="hi">मासिक EMI</span></span><span class="big" id="emiOut">—</span></div>
+          <dl class="rows">
+            <div><dt>Total interest · कुल ब्याज</dt><dd id="emiInt">—</dd></div>
+            <div><dt>Total payment · कुल भुगतान</dt><dd id="emiTot">—</dd></div>
+            <div><dt>Number of EMIs · किश्तें</dt><dd id="emiN">—</dd></div>
+          </dl>
+          <div class="split" aria-hidden="true"><i class="p" id="emiBarP"></i><i class="i" id="emiBarI"></i></div>
+          <div class="legend"><span><b style="background:var(--brand)"></b>Principal · मूलधन <span id="emiPp"></span></span><span><b style="background:var(--accent)"></b>Interest · ब्याज <span id="emiIp"></span></span></div>
+        </div>
+        <p class="note">Values are estimates for a fixed-rate, reducing-balance loan. Your bank's figure may differ because of fees and rounding.</p>
+      </section>
+
+      <!-- GST -->
+      <section class="panel" data-view="gst" aria-labelledby="h-gst">
+        <h2 id="h-gst">GST Calculator</h2>
+        <p class="sub hi" lang="hi">जीएसटी कैलकुलेटर</p>
+        <p class="lede">Add GST to a price, or take it out of a price that already includes GST.</p>
+        <div class="form">
+          <div class="field full">
+            <label for="gstA">Amount (₹) <span class="hi" lang="hi">राशि</span></label>
+            <input id="gstA" type="number" min="0" step="1" value="10000">
+          </div>
+          <div class="field">
+            <span class="lab" id="gstRl">GST rate <span class="hi" lang="hi">जीएसटी दर</span></span>
+            <div class="seg" role="radiogroup" aria-labelledby="gstRl">
+              <label><input type="radio" name="gstR" value="5"><span>5%</span></label>
+              <label><input type="radio" name="gstR" value="12"><span>12%</span></label>
+              <label><input type="radio" name="gstR" value="18" checked><span>18%</span></label>
+              <label><input type="radio" name="gstR" value="28"><span>28%</span></label>
+            </div>
+          </div>
+          <div class="field">
+            <span class="lab" id="gstMl">Mode <span class="hi" lang="hi">तरीका</span></span>
+            <div class="seg" role="radiogroup" aria-labelledby="gstMl">
+              <label><input type="radio" name="gstM" value="add" checked><span>Add GST</span></label>
+              <label><input type="radio" name="gstM" value="remove"><span>Remove GST</span></label>
+            </div>
+          </div>
+        </div>
+        <div class="result" aria-live="polite">
+          <div class="headline"><span class="k" id="gstTl">Final price <span class="hi" lang="hi">कुल कीमत</span></span><span class="big" id="gstOut">—</span></div>
+          <dl class="rows">
+            <div><dt>Price before GST · GST से पहले</dt><dd id="gstNet">—</dd></div>
+            <div><dt>Total GST · कुल GST</dt><dd id="gstTax">—</dd></div>
+            <div><dt>CGST (half) · केंद्र</dt><dd id="gstC">—</dd></div>
+            <div><dt>SGST (half) · राज्य</dt><dd id="gstS">—</dd></div>
+          </dl>
+        </div>
+        <p class="note">Check the current GST rate for your product on the official GST portal. Rates can change.</p>
+      </section>
+
+      <!-- Age -->
+      <section class="panel" data-view="age" aria-labelledby="h-age">
+        <h2 id="h-age">Age Calculator</h2>
+        <p class="sub hi" lang="hi">उम्र कैलकुलेटर</p>
+        <p class="lede">Enter a date of birth to see exact age in years, months and days, and the days left for the next birthday.</p>
+        <div class="form">
+          <div class="field">
+            <label for="ageD">Date of birth <span class="hi" lang="hi">जन्म तिथि</span></label>
+            <input id="ageD" type="date" value="2004-08-15">
+          </div>
+          <div class="field">
+            <label for="ageT">Age on date <span class="hi" lang="hi">इस तारीख को उम्र</span></label>
+            <input id="ageT" type="date">
+          </div>
+        </div>
+        <p class="note">The date of birth above is an example. Change it to yours.</p>
+        <div class="result" aria-live="polite">
+          <div class="headline"><span class="k">Your age <span class="hi" lang="hi">आपकी उम्र</span></span><span class="big" id="ageOut">—</span></div>
+          <dl class="rows">
+            <div><dt>Total months · कुल महीने</dt><dd id="ageM">—</dd></div>
+            <div><dt>Total days · कुल दिन</dt><dd id="ageDays">—</dd></div>
+            <div><dt>Next birthday · अगला जन्मदिन</dt><dd id="ageNext">—</dd></div>
+          </dl>
+        </div>
+      </section>
+
+      <!-- BMI -->
+      <section class="panel" data-view="bmi" aria-labelledby="h-bmi">
+        <h2 id="h-bmi">BMI Calculator</h2>
+        <p class="sub hi" lang="hi">बीएमआई कैलकुलेटर</p>
+        <p class="lede">Body Mass Index compares your weight with your height. It is a quick screening number, not a diagnosis.</p>
+        <div class="form">
+          <div class="field">
+            <label for="bmiH">Height (cm) <span class="hi" lang="hi">ऊंचाई</span></label>
+            <input id="bmiH" type="number" min="50" max="250" step="1" value="170">
+          </div>
+          <div class="field">
+            <label for="bmiW">Weight (kg) <span class="hi" lang="hi">वज़न</span></label>
+            <input id="bmiW" type="number" min="10" max="300" step="0.5" value="65">
+          </div>
+        </div>
+        <div class="result" aria-live="polite">
+          <div class="headline"><span class="k">Your BMI <span class="hi" lang="hi">आपका BMI</span></span><span class="big" id="bmiOut">—</span><span class="status" id="bmiCat">—</span></div>
+          <div class="scale" aria-hidden="true">
+            <i style="background:#5B9BD5"></i><i style="background:#4CAF7A"></i><i style="background:#E8A317"></i><i style="background:#D9534F"></i>
+          </div>
+          <div class="mark" id="bmiMark" aria-hidden="true"></div>
+          <div class="ticks" aria-hidden="true"><span>15</span><span>18.5</span><span>25</span><span>30</span><span>40</span></div>
+        </div>
+        <p class="note">Categories follow the WHO adult ranges. For Indian adults, some doctors use lower cut-offs. Talk to a doctor for health advice. डॉक्टर से सलाह ज़रूर लें।</p>
+      </section>
+
+      <!-- Percentage -->
+      <section class="panel" data-view="percent" aria-labelledby="h-pc">
+        <h2 id="h-pc">Percentage Calculator</h2>
+        <p class="sub hi" lang="hi">प्रतिशत कैलकुलेटर</p>
+        <p class="lede">Three common percentage questions. Each answer updates as you type.</p>
+        <div class="trio">
+          <div class="mini">
+            <div class="line"><input id="pc1a" type="number" value="15" aria-label="Percent"> % of <input id="pc1b" type="number" value="2400" aria-label="Number"> =</div>
+            <div class="out" id="pc1o">—</div>
+          </div>
+          <div class="mini">
+            <div class="line"><input id="pc2a" type="number" value="360" aria-label="Part"> is what % of <input id="pc2b" type="number" value="2400" aria-label="Whole"> ?</div>
+            <div class="out" id="pc2o">—</div>
+          </div>
+          <div class="mini">
+            <div class="line">Change from <input id="pc3a" type="number" value="80" aria-label="Old value"> to <input id="pc3b" type="number" value="100" aria-label="New value"></div>
+            <div class="out" id="pc3o">—</div>
+          </div>
+        </div>
+        <p class="note">Useful for discounts, marks, salary hikes and profit. छूट, अंक, वेतन वृद्धि और मुनाफ़े के लिए।</p>
+      </section>
+
+      <!-- Text -->
+      <section class="panel" data-view="text" aria-labelledby="h-tx">
+        <h2 id="h-tx">Word Counter</h2>
+        <p class="sub hi" lang="hi">शब्द गिनती टूल</p>
+        <p class="lede">Paste or type text to count words, characters, sentences and reading time. Works with Hindi and English.</p>
+        <div class="field">
+          <label for="txIn">Your text <span class="hi" lang="hi">आपका टेक्स्ट</span></label>
+          <textarea id="txIn">SahajTools is a set of simple calculators. सहज टूल्स रोज़ के कामों को आसान बनाते हैं। Paste your own text here to count it.</textarea>
+        </div>
+        <div class="result" aria-live="polite">
+          <dl class="rows" style="margin-top:0">
+            <div><dt>Words · शब्द</dt><dd id="txW">—</dd></div>
+            <div><dt>Characters · अक्षर</dt><dd id="txC">—</dd></div>
+            <div><dt>No spaces · बिना स्पेस</dt><dd id="txN">—</dd></div>
+            <div><dt>Sentences · वाक्य</dt><dd id="txS">—</dd></div>
+            <div><dt>Reading time · पढ़ने का समय</dt><dd id="txR">—</dd></div>
+          </dl>
+        </div>
+      </section>
+
+      <!-- About -->
+      <section class="panel prose" data-view="about" aria-labelledby="h-ab">
+        <h2 id="h-ab">About SahajTools</h2>
+        <p class="sub hi" lang="hi">हमारे बारे में</p>
+        <p>SahajTools gives people free, simple calculators for money, health and daily work. Every tool is explained in plain English with Hindi beside it. "Sahaj" means easy.</p>
+        <h3>Our promise</h3>
+        <p>No sign-up. No fees. The numbers you type are worked out in your own browser and are not sent to us.</p>
+        <h3>Contact</h3>
+        <p>Add your contact email here before you publish the site.</p>
+      </section>
+
+      <!-- Privacy -->
+      <section class="panel prose" data-view="privacy" aria-labelledby="h-pr">
+        <h2 id="h-pr">Privacy Policy</h2>
+        <p class="sub hi" lang="hi">गोपनीयता नीति</p>
+        <p>The calculators run in your browser. We do not collect or store the amounts, dates or text you enter.</p>
+        <h3>Advertising</h3>
+        <p>This site shows ads to pay for hosting. Ad partners such as Google may use cookies to show ads based on your visits to this and other sites. You can manage ad personalisation in your Google account settings.</p>
+        <h3>Changes</h3>
+        <p>We may update this policy. The latest version is always on this page.</p>
+      </section>
+
+      <aside class="ad inline" aria-label="Advertisement">
+        <div><small>Advertisement · विज्ञापन</small><span>Ad slot (in-content, responsive)</span></div>
+      </aside>
+    </div>
+
+    <div class="side">
+      <aside class="ad rect" aria-label="Advertisement">
+        <div><small>Advertisement · विज्ञापन</small><span>Ad slot 300×250</span></div>
+      </aside>
+      <div class="more">
+        <h3>All tools</h3>
+        <ul>
+          <li><a href="#emi">EMI Calculator <span class="hi" lang="hi">EMI</span></a></li>
+          <li><a href="#gst">GST Calculator <span class="hi" lang="hi">जीएसटी</span></a></li>
+          <li><a href="#age">Age Calculator <span class="hi" lang="hi">उम्र</span></a></li>
+          <li><a href="#bmi">BMI Calculator <span class="hi" lang="hi">बीएमआई</span></a></li>
+          <li><a href="#percent">Percentage <span class="hi" lang="hi">प्रतिशत</span></a></li>
+          <li><a href="#text">Word Counter <span class="hi" lang="hi">शब्द</span></a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>© <span id="yr">2026</span> SahajTools. Free to use.</span>
+    <nav aria-label="Footer">
+      <a href="#about">About · हमारे बारे में</a>
+      <a href="#privacy">Privacy · गोपनीयता</a>
+    </nav>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+  var inr = function (n) { return "₹" + Math.round(n).toLocaleString("en-IN"); };
+  var num = function (n, d) { return Number(n).toLocaleString("en-IN", { maximumFractionDigits: d == null ? 2 : d }); };
+  var val = function (id) { var v = parseFloat($(id).value); return isFinite(v) ? v : NaN; };
+
+  /* ---------- routing ---------- */
+  var views = ["emi", "gst", "age", "bmi", "percent", "text", "about", "privacy"];
+  function route() {
+    var h = (location.hash || "").replace("#", "");
+    if (views.indexOf(h) < 0) h = "emi";
+    document.querySelectorAll("[data-view]").forEach(function (s) { s.classList.toggle("on", s.getAttribute("data-view") === h); });
+    document.querySelectorAll("[data-nav]").forEach(function (a) {
+      if (a.getAttribute("data-nav") === h) a.setAttribute("aria-current", "page"); else a.removeAttribute("aria-current");
+    });
+    var cur = document.querySelector('[data-nav="' + h + '"]');
+    if (cur && cur.scrollIntoView) { try { cur.scrollIntoView({ block: "nearest", inline: "center" }); } catch (e) {} }
+  }
+  window.addEventListener("hashchange", function () { route(); window.scrollTo(0, 0); });
+
+  /* ---------- EMI ---------- */
+  function bindPair(numId, rangeId, fn) {
+    var n = $(numId), r = $(rangeId);
+    n.addEventListener("input", function () { r.value = n.value; fn(); });
+    r.addEventListener("input", function () { n.value = r.value; fn(); });
+  }
+  function emi() {
+    var P = val("emiP"), R = val("emiR"), Y = val("emiT");
+    if (!(P > 0) || !(R >= 0) || !(Y > 0)) { $("emiOut").textContent = "—"; return; }
+    var n = Math.round(Y * 12), r = R / 12 / 100;
+    var e = r === 0 ? P / n : P * r * Math.pow(1 + r, n) / (Math.pow(1 + r, n) - 1);
+    var total = e * n, interest = total - P;
+    $("emiOut").textContent = inr(e);
+    $("emiInt").textContent = inr(interest);
+    $("emiTot").textContent = inr(total);
+    $("emiN").textContent = n;
+    var pp = P / total * 100;
+    $("emiBarP").style.width = pp + "%";
+    $("emiBarI").style.width = (100 - pp) + "%";
+    $("emiPp").textContent = pp.toFixed(0) + "%";
+    $("emiIp").textContent = (100 - pp).toFixed(0) + "%";
+  }
+  bindPair("emiP", "emiPr", emi); bindPair("emiR", "emiRr", emi); bindPair("emiT", "emiTr", emi);
+
+  /* ---------- GST ---------- */
+  function radio(name) { var c = document.querySelector('input[name="' + name + '"]:checked'); return c ? c.value : null; }
+  function gst() {
+    var a = val("gstA"), rate = parseFloat(radio("gstR")), mode = radio("gstM");
+    if (!(a >= 0)) { $("gstOut").textContent = "—"; return; }
+    var net, tax, total;
+    if (mode === "add") { net = a; tax = a * rate / 100; total = a + tax; }
+    else { total = a; net = a / (1 + rate / 100); tax = a - net; }
+    $("gstOut").textContent = "₹" + num(mode === "add" ? total : net, 2);
+    $("gstTl").innerHTML = mode === "add"
+      ? 'Final price <span class="hi" lang="hi">कुल कीमत</span>'
+      : 'Price without GST <span class="hi" lang="hi">GST हटाकर कीमत</span>';
+    $("gstNet").textContent = "₹" + num(net, 2);
+    $("gstTax").textContent = "₹" + num(tax, 2);
+    $("gstC").textContent = "₹" + num(tax / 2, 2);
+    $("gstS").textContent = "₹" + num(tax / 2, 2);
+  }
+  $("gstA").addEventListener("input", gst);
+  document.querySelectorAll('input[name="gstR"], input[name="gstM"]').forEach(function (i) { i.addEventListener("change", gst); });
+
+  /* ---------- Age ---------- */
+  function parseD(s) { var p = (s || "").split("-"); return p.length === 3 ? new Date(+p[0], +p[1] - 1, +p[2]) : null; }
+  function toISO(d) { var m = d.getMonth() + 1, day = d.getDate(); return d.getFullYear() + "-" + (m < 10 ? "0" : "") + m + "-" + (day < 10 ? "0" : "") + day; }
+  function age() {
+    var dob = parseD($("ageD").value), to = parseD($("ageT").value);
+    if (!dob || !to || to < dob) { $("ageOut").textContent = "—"; $("ageM").textContent = $("ageDays").textContent = $("ageNext").textContent = "—"; return; }
+    var y = to.getFullYear() - dob.getFullYear(), m = to.getMonth() - dob.getMonth(), d = to.getDate() - dob.getDate();
+    if (d < 0) { m--; d += new Date(to.getFullYear(), to.getMonth(), 0).getDate(); }
+    if (m < 0) { y--; m += 12; }
+    var days = Math.round((to - dob) / 864e5);
+    var next = new Date(to.getFullYear(), dob.getMonth(), dob.getDate());
+    if (next < to) next = new Date(to.getFullYear() + 1, dob.getMonth(), dob.getDate());
+    var left = Math.round((next - to) / 864e5);
+    $("ageOut").textContent = y + "y " + m + "m " + d + "d";
+    $("ageM").textContent = num(y * 12 + m, 0);
+    $("ageDays").textContent = num(days, 0);
+    $("ageNext").textContent = left === 0 ? "Today!" : left + " days";
+  }
+  $("ageT").value = toISO(new Date());
+  $("ageD").addEventListener("input", age); $("ageT").addEventListener("input", age);
+
+  /* ---------- BMI ---------- */
+  function bmi() {
+    var h = val("bmiH"), w = val("bmiW");
+    if (!(h > 0) || !(w > 0)) { $("bmiOut").textContent = "—"; $("bmiCat").textContent = "—"; return; }
+    var b = w / Math.pow(h / 100, 2), cat, col;
+    if (b < 18.5) { cat = "Underweight · कम वज़न"; col = "var(--warn)"; }
+    else if (b < 25) { cat = "Normal · सामान्य"; col = "var(--good)"; }
+    else if (b < 30) { cat = "Overweight · ज़्यादा वज़न"; col = "var(--warn)"; }
+    else { cat = "Obese · मोटापा"; col = "var(--bad)"; }
+    $("bmiOut").textContent = b.toFixed(1);
+    $("bmiCat").textContent = cat; $("bmiCat").style.color = col;
+    var pos = Math.max(0, Math.min(1, (b - 15) / 25)) * 100;
+    $("bmiMark").style.setProperty("--pos", pos + "%");
+  }
+  $("bmiH").addEventListener("input", bmi); $("bmiW").addEventListener("input", bmi);
+
+  /* ---------- Percentage ---------- */
+  function pct() {
+    var a = val("pc1a"), b = val("pc1b");
+    $("pc1o").textContent = isFinite(a * b) ? num(a * b / 100, 2) : "—";
+    a = val("pc2a"); b = val("pc2b");
+    $("pc2o").textContent = (isFinite(a / b) && b !== 0) ? num(a / b * 100, 2) + "%" : "—";
+    a = val("pc3a"); b = val("pc3b");
+    if (isFinite(a) && isFinite(b) && a !== 0) {
+      var c = (b - a) / Math.abs(a) * 100;
+      $("pc3o").textContent = (c >= 0 ? "+" : "") + num(c, 2) + "% " + (c >= 0 ? "increase" : "decrease");
+    } else { $("pc3o").textContent = "—"; }
+  }
+  ["pc1a", "pc1b", "pc2a", "pc2b", "pc3a", "pc3b"].forEach(function (id) { $(id).addEventListener("input", pct); });
+
+  /* ---------- Text ---------- */
+  function text() {
+    var t = $("txIn").value, trimmed = t.trim();
+    var words = trimmed ? trimmed.split(/\s+/).length : 0;
+    var sentences = trimmed ? (trimmed.match(/[^.!?।]+[.!?।]+|[^.!?।]+$/g) || []).filter(function (s) { return s.trim(); }).length : 0;
+    var mins = words / 200;
+    $("txW").textContent = num(words, 0);
+    $("txC").textContent = num(t.length, 0);
+    $("txN").textContent = num(t.replace(/\s/g, "").length, 0);
+    $("txS").textContent = num(sentences, 0);
+    $("txR").textContent = words === 0 ? "0 min" : (mins < 1 ? "< 1 min" : Math.round(mins) + " min");
+  }
+  $("txIn").addEventListener("input", text);
+
+  $("yr").textContent = new Date().getFullYear();
+  route(); emi(); gst(); age(); bmi(); pct(); text();
+})();
+</script>
+
+</body>
+</html>
